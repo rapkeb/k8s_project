@@ -16,5 +16,10 @@ def get_time():
     return f'The current time is: {current_time_str}'
 
 
+@app.route('/flask/kinan', methods=['Get'])
+def get_kinan():
+    return f'The current time is: kinan'
+
+
 if __name__ == '__main__':
     app.run(debug=True, port=5005)
