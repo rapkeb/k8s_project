@@ -30,7 +30,7 @@ spec:
     spec:
       containers:
         - name: flask-app
-          image: rapkeb/flask-app:1.2
+          image: rapkeb/ui:1.0
           ports:
             - containerPort: 5005
         - name: nginx
