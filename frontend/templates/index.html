@@ -19,7 +19,7 @@
             event.preventDefault(); // Prevent the form from submitting the traditional way
 
             const userId = document.getElementById('user_id').value;
-            const url = `/submit/${encodeURIComponent(userId)}`;
+            const url = `/flask/submit/${userId}`;
 
             const response = await fetch(url, {
                 method: 'GET'

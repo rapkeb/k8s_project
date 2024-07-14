@@ -9,7 +9,7 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 5005
-  type: LoadBalancer
+  type: ClusterIP
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - name: flask-app
-        image: rapkeb/backend:1.2
+        image: rapkeb/backend:3.0
         ports:
         - containerPort: 5005
 
