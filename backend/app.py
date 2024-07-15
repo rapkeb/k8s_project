@@ -29,15 +29,19 @@ def convert_objectid(doc):
             doc[key] = str(value)
     return doc
 
-@app.route('/head', methods=['GET'])
-def head():
-     # Retrieve the first 5 documents
-    head_documents = collection.find().limit(5)
-    
+@app.route('/show/<type>', methods=['GET'])
+def show(type):
+    if type == 'head':
+        # Retrieve the first 5 documents
+        documents = collection.find().limit(5)
+    elif type == 'tail':
+        # Retrieve the last 5 documents
+        documents = collection.find().sort([('$natural', -1)]).limit(5)
     # Convert documents to JSON
-    json_output = [convert_objectid(doc) for doc in head_documents]
-    
+    json_output = [convert_objectid(doc) for doc in documents]
+
     return jsonify(json_output)
+
 
 @app.route('/submit/<user_id>', methods=['GET'])
 def submit(user_id):
