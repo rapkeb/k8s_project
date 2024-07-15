@@ -12,6 +12,9 @@ def home():
 def welcome():
     return render_template('index.html')
 
+@app.route('/explore')
+def explore():
+    return render_template('explore.html')
 
 if __name__ == '__main__':
     app.run(debug=True, port=5005)

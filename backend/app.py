@@ -21,6 +21,15 @@ try:
 except Exception as e:
     print(f"Error connecting to MongoDB: {e}")
 
+@app.route('/head', methods=['GET'])
+def head():
+     # Retrieve the first 5 documents
+    head_documents = collection.find().limit(5)
+    
+    # Convert documents to JSON
+    json_output = [doc for doc in head_documents]
+    
+    return jsonify(json_output)
 
 @app.route('/submit/<user_id>', methods=['GET'])
 def submit(user_id):
