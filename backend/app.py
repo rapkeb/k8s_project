@@ -32,20 +32,26 @@ def submit(user_id):
         return jsonify(user)
     else:
         return jsonify({"error": f"User ID {user_id} not found"}), 404
+    
+
+@app.route('/charges/<monthly_charges>', methods=['GET'])
+def submit_by_charges(monthly_charges):
+    # Query MongoDB for customers with MonthlyCharges above the specified amount
+    customers = collection.find({"MonthlyCharges": {"$gt": float(monthly_charges)}}).limit(15)
+    customer_ids = [str(customer["customerID"]) for customer in customers]
+
+    if customer_ids:
+        return jsonify(customer_ids)
+    else:
+        return jsonify({"error": f"No customers found with MonthlyCharges above {monthly_charges}"}), 404
 
     
-@app.route('/upload', methods=['POST'])
+@app.route('/upload', methods=['GET'])
 def upload_csv():
     df = pd.read_csv('churn.csv')
-    print(df.head)
     data = df.to_dict(orient='records')
     result = collection.insert_many(data)
     return jsonify({'result': 'Data inserted successfully', 'inserted_ids': str(result.inserted_ids)}), 201
-    
-
-@app.route('/flask/kinan', methods=['Get'])
-def get_kinan():
-    return f'The current time is: kinan'
 
 
 if __name__ == '__main__':

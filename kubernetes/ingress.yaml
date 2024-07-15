@@ -16,6 +16,13 @@ spec:
             name: frontend
             port:
               number: 80
+      - path: /front/(.+)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: frontend
+            port:
+              number: 80
       - path: /flask/(.+)
         pathType: ImplementationSpecific
         backend:
