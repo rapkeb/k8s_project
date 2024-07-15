@@ -1,6 +1,7 @@
 from flask import Flask, jsonify
 import pandas as pd
 from pymongo import MongoClient
+from bson import ObjectId
 
 
 app = Flask(__name__)
@@ -21,13 +22,20 @@ try:
 except Exception as e:
     print(f"Error connecting to MongoDB: {e}")
 
+
+def convert_objectid(doc):
+    for key, value in doc.items():
+        if isinstance(value, ObjectId):
+            doc[key] = str(value)
+    return doc
+
 @app.route('/head', methods=['GET'])
 def head():
      # Retrieve the first 5 documents
     head_documents = collection.find().limit(5)
     
     # Convert documents to JSON
-    json_output = [doc for doc in head_documents]
+    json_output = [convert_objectid(doc) for doc in head_documents]
     
     return jsonify(json_output)
 
