@@ -52,12 +52,17 @@
             <h1>Show Head</h1>
             <button id="head">Show</button>
         </div>
+        <div class="section">
+            <h1>Show Tail</h1>
+            <button id="tail">Tail</button>
+        </div>
         <div id="result" class="user-data"></div>
     </div>
 
     <script>
+        //head script:
         document.getElementById('head').addEventListener('click', async function(event) {
-            const url = `/flask/head`;
+            const url = `/flask/show/head`;
 
             const response = await fetch(url, {
                 method: 'GET'
@@ -75,7 +80,26 @@
                 resultDiv.innerHTML = `<p>${errorData.error}</p>`;
             }
         });
+        //tail script:
+        document.getElementById('tail').addEventListener('click', async function(event) {
+            const url = `/flask/show/tail`;
 
+            const response = await fetch(url, {
+                method: 'GET'
+            });
+
+            const resultDiv = document.getElementById('result');
+
+            if (response.ok) {
+                const data = await response.json();
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = formatTable(data);
+            } else {
+                const errorData = await response.json();
+                resultDiv.style.display = 'block';
+                resultDiv.innerHTML = `<p>${errorData.error}</p>`;
+            }
+        });
         function formatTable(data) {
             let formattedTable = '<table><thead><tr>';
             // Create table headers
