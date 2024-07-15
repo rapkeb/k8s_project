@@ -16,37 +16,33 @@
             color: white;
         }
         .container {
-            display: flex;
-            justify-content: space-between;
-            width: 80%;
+            width: 90%;
             max-width: 1200px;
         }
         .section {
-            width: 45%;
             text-align: center;
+            margin-bottom: 20px;
         }
         .user-data {
-            margin-top: 20px;
-            border: 1px solid #ccc;
-            border-radius: 10px;
-            padding: 20px;
-            width: 100%;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: none;
+            overflow-x: auto;
             background-color: #fff;
-            color: #fabedb;
+            color: #333;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
-        .user-data h2 {
-            text-align: center;
-            margin-bottom: 20px;
+        .user-data table {
+            width: 100%;
+            border-collapse: collapse;
         }
-        .user-data p {
-            margin: 10px 0;
+        .user-data th, .user-data td {
+            border: 1px solid #ccc;
+            padding: 8px;
+            text-align: left;
         }
-        .user-data p span {
-            font-weight: bold;
-        }
-        form {
-            margin-bottom: 20px;
+        .user-data th {
+            background-color: #f2f2f2;
         }
     </style>
 </head>
@@ -56,11 +52,7 @@
             <h1>Show Head</h1>
             <button id="head">Show</button>
         </div>
-        <div id="result" class="user-data" style="display: none;"></div>
-        <!-- <div class="section">
-            <h1>Show Tail</h1>
-            <button id="tail">Show</button>
-        </div> -->
+        <div id="result" class="user-data"></div>
     </div>
 
     <script>
@@ -84,31 +76,8 @@
             }
         });
 
-        // document.getElementById('chargeForm').addEventListener('submit', async function(event) {
-        //     event.preventDefault(); // Prevent the form from submitting the traditional way
-
-        //     const monthlyCharges = document.getElementById('monthly_charges').value;
-        //     const url = `/flask/charges/${monthlyCharges}`;
-
-        //     const response = await fetch(url, {
-        //         method: 'GET'
-        //     });
-
-        //     const resultDiv = document.getElementById('highChargesResult');
-
-        //     if (response.ok) {
-        //         const data = await response.json();
-        //         resultDiv.style.display = 'block';
-        //         resultDiv.innerHTML = formatChargeData(data);
-        //     } else {
-        //         const errorData = await response.json();
-        //         resultDiv.style.display = 'block';
-        //         resultDiv.innerHTML = `<p>${errorData.error}</p>`;
-        //     }
-        // });
-
-        function formaTable(data) {
-            let formattedTable = '<table border="1"><thead><tr>';
+        function formatTable(data) {
+            let formattedTable = '<table><thead><tr>';
             // Create table headers
             for (const key in data[0]) {
                 formattedTable += `<th>${key}</th>`;
@@ -127,14 +96,6 @@
             formattedTable += '</tbody></table>';
             return formattedTable;
         }
-
-//         function formatChargeData(data) {
-//     let formattedData = '<h2>Customer IDs with High Monthly Charges</h2>';
-//     data.forEach(customerID => {
-//         formattedData += `<p><span>Customer ID:</span> ${customerID}</p>`;
-//     });
-//     return formattedData;
-// }
     </script>
 </body>
 </html>
