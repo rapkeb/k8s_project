@@ -63,7 +63,16 @@
                 if (!response.ok) {
                     throw new Error(`HTTP error! Status: ${response.status}`);
                 }
-                await new Promise(resolve => setTimeout(resolve, 2000));
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                const data = await response.json();
+
+                // Update button text based on response
+                if (response.status === 200) {
+                    buttonText.textContent = data.result; // Data already inserted successfully
+                } else if (response.status === 404) {
+                    buttonText.textContent = data.result; // No data loaded yet
+                }
+                await new Promise(resolve => setTimeout(resolve, 1000));
 
                 const url1 = `/front/welcome`;
                 try {

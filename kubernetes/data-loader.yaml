@@ -1,0 +1,11 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mongo-data-loader
+spec:
+  template:
+    spec:
+      containers:
+      - name: mongo-data-loader
+        image: rapkeb/mongo-data-loader:8.0
+      restartPolicy: Never
