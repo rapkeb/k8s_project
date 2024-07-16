@@ -67,12 +67,17 @@ def submit_by_charges(monthly_charges):
         return jsonify({"error": f"No customers found with MonthlyCharges above {monthly_charges}"}), 404
 
     
+# Function to check if collection is empty
+def is_collection_empty():
+    empty = collection.count_documents({}) == 0
+    return empty
+
 @app.route('/upload', methods=['GET'])
 def upload_csv():
-    df = pd.read_csv('churn.csv')
-    data = df.to_dict(orient='records')
-    result = collection.insert_many(data)
-    return jsonify({'result': 'Data inserted successfully', 'inserted_ids': str(result.inserted_ids)}), 201
+    if is_collection_empty():
+        return jsonify({'result': 'No data loaded yet. Pod for loading data not completed.'}), 404
+    else:
+        return jsonify({'result': 'Data already inserted successfully.'}), 200
 
 
 if __name__ == '__main__':
