@@ -20,3 +20,15 @@ To get started with this project, follow these steps:
    ```bash
    git clone https://github.com/rapkeb/k8s_project.git
    cd k8s_project
+2. **run the commands**:
+   ```bash
+   cd kubernetes
+   kubectl apply -f mongo.yaml
+   *make sure to wait until the mongo pod is running before continue to the next command*
+   kubectl apply -f data-loader.yaml
+   kubectl create configmap nginx-config --from-file=frontend.conf
+   kubectl apply -f frontend.yaml
+   kubectl apply -f backend.yaml
+   kubectl apply -f ingress.yaml
+   minikube addons enable ingress
+   minikube tunnel
