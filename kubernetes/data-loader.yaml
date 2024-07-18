@@ -7,5 +7,5 @@ spec:
     spec:
       containers:
       - name: mongo-data-loader
-        image: rapkeb/mongo-data-loader:8.0
+        image: rapkeb/mongo-data-loader:8.5
       restartPolicy: Never

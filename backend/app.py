@@ -21,10 +21,6 @@ try:
     # Example query
     print(f"First document in raw_data: {collection.find_one()}")
 
-    #load the model
-    with open('model.pkl', 'rb') as f: 
-        model = pickle.load(f)
-
 except Exception as e:
     print(f"Error connecting to MongoDB: {e}")
 
@@ -94,7 +90,7 @@ def writeToDB(predObj, churn):
 
 
 
-@app.roote('/predict', methods = ['POST'])
+@app.route('/predict', methods = ['POST'])
 def predict():
     # load the data
     predObj = request.args
@@ -103,12 +99,15 @@ def predict():
     #list the data
     client_data = list(data.values())
     # predict
-    prediction = model.predict(client_data)
-    print(prediction)
+    #load the model
+    with open('model.pkl', 'rb') as f: 
+        model = pickle.load(f)
+        prediction = model.predict(client_data)
+        print(prediction)
     # call the writeToDB with the object
-    writeToDB(predObj, prediction)
+        writeToDB(predObj, prediction)
     #return 1:0
-    return prediction
+        return prediction
 
 
 # Parse the object from the req, return the data
