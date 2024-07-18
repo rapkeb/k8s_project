@@ -29,7 +29,7 @@ spec:
     spec:
       containers:
       - name: flask-app
-        image: rapkeb/backend:7.8
+        image: yaelprat/backend:8.0
         ports:
         - containerPort: 5005
 
