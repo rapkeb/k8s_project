@@ -2,6 +2,7 @@ from flask import Flask, json, jsonify, request
 import pandas as pd
 from pymongo import MongoClient
 from bson import ObjectId
+import pickle
 
 
 app = Flask(__name__)
@@ -19,6 +20,11 @@ try:
     collection = db.raw_data
     # Example query
     print(f"First document in raw_data: {collection.find_one()}")
+
+    #load the model
+    with open('model.pkl', 'rb') as f: 
+        model = pickle.load(f)
+
 except Exception as e:
     print(f"Error connecting to MongoDB: {e}")
 
@@ -82,90 +88,55 @@ def upload_csv():
 
 def writeToDB(predObj, churn):
     clients_collection = db.clients_churn
-    client_data = {
-        'SeniorCitizen': predObj.get('SeniorCitizen'),
-        'Partner': predObj.get('Partner'),
-        'Dependents': predObj.get('Dependents'),
-        'tenure': predObj.get('tenure'),
-        'OnlineSecurity': predObj.get('OnlineSecurity'),
-        'TechSupport': predObj.get('TechSupport'),
-        'PaperlessBilling': predObj.get('PaperlessBilling'),
-        'MonthlyCharges': predObj.get('MonthlyCharges'),
-        'TotalCharges': predObj.get('TotalCharges'),
-        'InternetService_DSL': predObj.get('InternetService_DSL'),
-        'InternetService_Fiber_optic': predObj.get('InternetService_Fiber_optic'),
-        'PaymentMethod_Credit_card': predObj.get('PaymentMethod_Credit_card'),
-        'PaymentMethod_Electronic_check': predObj.get('PaymentMethod_Electronic_check'),
-        'PaymentMethod_Mailed_check': predObj.get('PaymentMethod_Mailed_check'),
-        'Contract_Month_to_month': predObj.get('Contract_Month-to-month'),
-        'Contract_One_year': predObj.get('Contract_One_year'),
-        'Contract_Two_year': predObj.get('Contract_Two_year'),
-        'Churn': churn
-    }
+    client_data = parse_object(predObj)
+    client_data['Churn'] =  churn
     clients_collection.insert_one(client_data)
 
 
 
-@app.roote('/predict',methods = ['post'])
+@app.roote('/predict', methods = ['POST'])
 def predict():
-    #load the model
     # load the data
     predObj = request.args
     # parse the data
-    # call the writeToDB with the object
+    data = parse_object(predObj)
+    #list the data
+    client_data = list(data.values())
     # predict
+    prediction = model.predict(client_data)
+    print(prediction)
+    # call the writeToDB with the object
+    writeToDB(predObj, prediction)
     #return 1:0
+    return prediction
 
 
 # Parse the object from the req, return the data
 # TODO convert to numeric values
 def parse_object(predObj):
-    data = json.loads(predObj)
-    return data
-
-
-def writeToDB(predObj, churn):
-    clients_collection = db.clients_churn
     client_data = {
-        'SeniorCitizen': predObj.get('SeniorCitizen'),
-        'Partner': predObj.get('Partner'),
-        'Dependents': predObj.get('Dependents'),
-        'tenure': predObj.get('tenure'),
-        'OnlineSecurity': predObj.get('OnlineSecurity'),
-        'TechSupport': predObj.get('TechSupport'),
-        'PaperlessBilling': predObj.get('PaperlessBilling'),
-        'MonthlyCharges': predObj.get('MonthlyCharges'),
-        'TotalCharges': predObj.get('TotalCharges'),
-        'InternetService_DSL': predObj.get('InternetService_DSL'),
-        'InternetService_Fiber_optic': predObj.get('InternetService_Fiber_optic'),
-        'PaymentMethod_Credit_card': predObj.get('PaymentMethod_Credit_card'),
-        'PaymentMethod_Electronic_check': predObj.get('PaymentMethod_Electronic_check'),
-        'PaymentMethod_Mailed_check': predObj.get('PaymentMethod_Mailed_check'),
-        'Contract_Month_to_month': predObj.get('Contract_Month-to-month'),
-        'Contract_One_year': predObj.get('Contract_One_year'),
-        'Contract_Two_year': predObj.get('Contract_Two_year'),
-        'Churn': churn
-    }
-    clients_collection.insert_one(client_data)
+            'SeniorCitizen': predObj.get('SeniorCitizen'),
+            'Partner': predObj.get('Partner'),
+            'Dependents': predObj.get('Dependents'),
+            'tenure': predObj.get('tenure'),
+            'OnlineSecurity': predObj.get('OnlineSecurity'),
+            'TechSupport': predObj.get('TechSupport'),
+            'PaperlessBilling': predObj.get('PaperlessBilling'),
+            'MonthlyCharges': predObj.get('MonthlyCharges'),
+            'TotalCharges': predObj.get('TotalCharges'),
+            'InternetService_DSL': predObj.get('InternetService_DSL'),
+            'InternetService_Fiber_optic': predObj.get('InternetService_Fiber_optic'),
+            'PaymentMethod_Credit_card': predObj.get('PaymentMethod_Credit_card'),
+            'PaymentMethod_Electronic_check': predObj.get('PaymentMethod_Electronic_check'),
+            'PaymentMethod_Mailed_check': predObj.get('PaymentMethod_Mailed_check'),
+            'Contract_Month_to_month': predObj.get('Contract_Month-to-month'),
+            'Contract_One_year': predObj.get('Contract_One_year'),
+            'Contract_Two_year': predObj.get('Contract_Two_year'),
+        }
+    return client_data
 
 
 
-@app.roote('/predict',methods = ['post'])
-def predict():
-    #load the model
-    # load the data
-    predObj = request.args
-    # parse the data
-    # call the writeToDB with the object
-    # predict
-    #return 1:0
-
-
-# Parse the object from the req, return the data
-# TODO convert to numeric values
-def parse_object(predObj):
-    data = json.loads(predObj)
-    return data
 
 
 if __name__ == '__main__':
