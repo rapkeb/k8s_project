@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Form</title>
+</head>
+<body>
+    <h1>Prediction Form</h1>
+    <form id="predictionForm" onsubmit="submitForm();">
+        <table>
+            <tr>
+                <td><label for="SeniorCitizen">Senior Citizen:</label></td>
+                <td><input type="checkbox" id="SeniorCitizen" name="SeniorCitizen"></td>
+            </tr>
+            <tr>
+                <td><label for="Partner">Partner:</label></td>
+                <td><input type="checkbox" id="Partner" name="Partner"></td>
+            </tr>
+            <tr>
+                <td><label for="Dependents">Dependents:</label></td>
+                <td><input type="checkbox" id="Dependents" name="Dependents"></td>
+            </tr>
+            <tr>
+                <td><label for="tenure">Tenure:</label></td>
+                <td><input type="number" id="tenure" name="tenure" required></td>
+            </tr>
+            <tr>
+                <td><label for="OnlineSecurity">Online Security:</label></td>
+                <td><input type="checkbox" id="OnlineSecurity" name="OnlineSecurity"></td>
+            </tr>
+            <tr>
+                <td><label for="TechSupport">Tech Support:</label></td>
+                <td><input type="checkbox" id="TechSupport" name="TechSupport"></td>
+            </tr>
+            <tr>
+                <td><label for="PaperlessBilling">Paperless Billing:</label></td>
+                <td><input type="checkbox" id="PaperlessBilling" name="PaperlessBilling"></td>
+            </tr>
+            <tr>
+                <td><label for="MonthlyCharges">Monthly Charges:</label></td>
+                <td><input type="number" id="MonthlyCharges" name="MonthlyCharges" step="0.01" required></td>
+            </tr>
+            <tr>
+                <td><label for="TotalCharges">Total Charges:</label></td>
+                <td><input type="number" id="TotalCharges" name="TotalCharges" step="0.01" required></td>
+            </tr>
+            <tr>
+                <td><label for="InternetService_DSL">Internet Service (DSL):</label></td>
+                <td><input type="checkbox" id="InternetService_DSL" name="InternetService_DSL"></td>
+            </tr>
+            <tr>
+                <td><label for="InternetService_Fiber">Internet Service (Fiber optic):</label></td>
+                <td><input type="checkbox" id="InternetService_Fiber" name="InternetService_Fiber"></td>
+            </tr>
+            <tr>
+                <td><label for="PaymentMethod_CreditCard">Payment Method (Credit card - automatic):</label></td>
+                <td><input type="checkbox" id="PaymentMethod_CreditCard" name="PaymentMethod_CreditCard"></td>
+            </tr>
+            <tr>
+                <td><label for="PaymentMethod_ElectronicCheck">Payment Method (Electronic check):</label></td>
+                <td><input type="checkbox" id="PaymentMethod_ElectronicCheck" name="PaymentMethod_ElectronicCheck"></td>
+            </tr>
+            <tr>
+                <td><label for="PaymentMethod_MailedCheck">Payment Method (Mailed check):</label></td>
+                <td><input type="checkbox" id="PaymentMethod_MailedCheck" name="PaymentMethod_MailedCheck"></td>
+            </tr>
+            <tr>
+                <td><label for="Contract_MonthToMonth">Contract (Month-to-month):</label></td>
+                <td><input type="checkbox" id="Contract_MonthToMonth" name="Contract_MonthToMonth"></td>
+            </tr>
+            <tr>
+                <td><label for="Contract_OneYear">Contract (One year):</label></td>
+                <td><input type="checkbox" id="Contract_OneYear" name="Contract_OneYear"></td>
+            </tr>
+            <tr>
+                <td><label for="Contract_TwoYear">Contract (Two year):</label></td>
+                <td><input type="checkbox" id="Contract_TwoYear" name="Contract_TwoYear"></td>
+            </tr>
+        </table>
+        <button type="submit">Submit</button>
+    </form>
+    <script>
+        document.getElementById('predictionForm').addEventListener('submit', function(event) {
+        event.preventDefault(); 
+        submitForm();
+        });
+        async function submitForm() {
+            const form = document.getElementById('predictionForm');
+            const params = {
+                SeniorCitizen: form.SeniorCitizen.checked,
+                Partner: form.Partner.checked,
+                Dependents: form.Dependents.checked,
+                tenure: form.tenure.value,
+                OnlineSecurity: form.OnlineSecurity.checked,
+                TechSupport: form.TechSupport.checked,
+                PaperlessBilling: form.PaperlessBilling.checked,
+                MonthlyCharges: form.MonthlyCharges.value,
+                TotalCharges: form.TotalCharges.value,
+                InternetService_DSL: form.InternetService_DSL.checked,
+                InternetService_Fiber: form.InternetService_Fiber.checked,
+                PaymentMethod_CreditCard: form.PaymentMethod_CreditCard.checked,
+                PaymentMethod_ElectronicCheck: form.PaymentMethod_ElectronicCheck.checked,
+                PaymentMethod_MailedCheck: form.PaymentMethod_MailedCheck.checked,
+                Contract_MonthToMonth: form.Contract_MonthToMonth.checked,
+                Contract_OneYear: form.Contract_OneYear.checked,
+                Contract_TwoYear: form.Contract_TwoYear.checked
+            };
+            console.log(params);
+
+            // Step 2: Convert the object to a query string
+            const queryString = new URLSearchParams(params).toString();
+
+            // Step 3: Append the query string to the URL
+            const url = "/flask/predict?" + queryString;
+
+            // Make the fetch request with the constructed URL
+            try {
+                const response = await fetch(url, {
+                    method: 'POST'
+                });
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                const data = await response.json();
+                console.log('Response:', data);
+                alert(data)
+                // Handle response data as needed
+            } catch (error) {
+                console.error('Error:', error);
+                // Handle errors
+            }
+        }
+    </script>
+</body>
+</html>
