@@ -1,4 +1,4 @@
-from flask import Flask, jsonify
+from flask import Flask, json, jsonify, request
 import pandas as pd
 from pymongo import MongoClient
 from bson import ObjectId
@@ -78,6 +78,24 @@ def upload_csv():
         return jsonify({'result': 'No data loaded yet. Pod for loading data not completed.'}), 404
     else:
         return jsonify({'result': 'Data already inserted successfully.'}), 200
+
+
+@app.roote('/predict',methods = ['post'])
+def predict():
+    #load the model
+    # load the data
+    predObj = request.args
+    # parse the data
+    # call the writeToDB with the object
+    # predict
+    #return 1:0
+
+
+# Parse the object from the req, return the data
+# TODO convert to numeric values
+def parse_object(predObj):
+    data = json.loads(predObj)
+    return data
 
 
 if __name__ == '__main__':
